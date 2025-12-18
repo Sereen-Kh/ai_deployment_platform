@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-platform-cli"
+version = "0.1.0"
+description = "CLI tool for AI Development Platform"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "AI Platform Team", email = "team@aiplatform.dev" }]
+keywords = ["ai", "ml", "cli", "deployment", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.7.0",
+    "httpx>=0.26.0",
+    "pyyaml>=6.0.1",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+]
+
+[project.scripts]
+ai-platform = "ai_platform.main:app"
+
+[project.urls]
+Homepage = "https://github.com/aiplatform/ai-deployment-platform"
+Documentation = "https://docs.aiplatform.dev"
+Repository = "https://github.com/aiplatform/ai-deployment-platform"
+
+[tool.setuptools.packages.find]
+where = ["."]
