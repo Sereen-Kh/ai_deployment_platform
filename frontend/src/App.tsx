@@ -6,6 +6,7 @@ import { LoginPage } from "@/pages/LoginPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { DeploymentsPage } from "@/pages/DeploymentsPage";
+import { DeploymentDetailPage } from "@/pages/DeploymentDetailPage";
 import { RAGPage } from "@/pages/RAGPage";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { SettingsPage } from "@/pages/SettingsPage";
@@ -31,6 +32,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<DashboardPage />} />
           <Route path="deployments" element={<DeploymentsPage />} />
+          <Route path="deployments/:id" element={<DeploymentDetailPage />} />
           <Route path="playground" element={<PlaygroundPage />} />
           <Route path="rag" element={<RAGPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />

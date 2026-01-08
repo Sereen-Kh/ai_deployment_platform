@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus,
@@ -59,6 +60,7 @@ const models = [
 
 export function DeploymentsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const navigate = useNavigate();
   const [newDeployment, setNewDeployment] = useState({
     name: "",
     model_name: "gpt-4",
@@ -317,7 +319,11 @@ export function DeploymentsPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {deployments?.map((deployment: any) => (
-              <Card key={deployment.id}>
+              <Card
+                key={deployment.id}
+                className="cursor-pointer transition-colors hover:bg-accent"
+                onClick={() => navigate(`/deployments/${deployment.id}`)}
+              >
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                   <div className="space-y-1">
                     <CardTitle className="text-lg">{deployment.name}</CardTitle>
@@ -325,18 +331,31 @@ export function DeploymentsPage() {
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/deployments/${deployment.id}`);
+                        }}
+                      >
                         <Settings2 className="mr-2 h-4 w-4" />
-                        Configure
+                        View Details
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-destructive"
-                        onClick={() => deleteMutation.mutate(deployment.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteMutation.mutate(deployment.id);
+                        }}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         Delete
@@ -369,7 +388,10 @@ export function DeploymentsPage() {
                         variant="outline"
                         size="sm"
                         className="flex-1"
-                        onClick={() => stopMutation.mutate(deployment.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          stopMutation.mutate(deployment.id);
+                        }}
                         disabled={stopMutation.isPending}
                       >
                         <Square className="mr-2 h-4 w-4" />
@@ -380,7 +402,10 @@ export function DeploymentsPage() {
                         variant="outline"
                         size="sm"
                         className="flex-1"
-                        onClick={() => startMutation.mutate(deployment.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          startMutation.mutate(deployment.id);
+                        }}
                         disabled={
                           startMutation.isPending ||
                           deployment.status === "deploying"

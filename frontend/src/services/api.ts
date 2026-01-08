@@ -70,84 +70,164 @@ export const authAPI = {
 
 // Deployments API
 export const deploymentsAPI = {
-  list: (params?: { page?: number; page_size?: number; status?: string }) =>
-    api.get("/deployments", { params }),
+  list: async (params?: {
+    page?: number;
+    page_size?: number;
+    status?: string;
+  }) => {
+    const response = await api.get("/deployments", { params });
+    return response.data;
+  },
 
-  get: (id: string) => api.get(`/deployments/${id}`),
+  get: async (id: string) => {
+    const response = await api.get(`/deployments/${id}`);
+    return response.data;
+  },
 
-  create: (data: CreateDeploymentData) => api.post("/deployments", data),
+  create: async (data: CreateDeploymentData) => {
+    const response = await api.post("/deployments", data);
+    return response.data;
+  },
 
-  update: (id: string, data: Partial<CreateDeploymentData>) =>
-    api.patch(`/deployments/${id}`, data),
+  update: async (id: string, data: Partial<CreateDeploymentData>) => {
+    const response = await api.patch(`/deployments/${id}`, data);
+    return response.data;
+  },
 
-  delete: (id: string) => api.delete(`/deployments/${id}`),
+  delete: async (id: string) => {
+    const response = await api.delete(`/deployments/${id}`);
+    return response.data;
+  },
 
-  start: (id: string) => api.post(`/deployments/${id}/start`),
+  start: async (id: string) => {
+    const response = await api.post(`/deployments/${id}/start`);
+    return response.data;
+  },
 
-  stop: (id: string) => api.post(`/deployments/${id}/stop`),
+  stop: async (id: string) => {
+    const response = await api.post(`/deployments/${id}/stop`);
+    return response.data;
+  },
 
-  redeploy: (id: string) => api.post(`/deployments/${id}/redeploy`),
+  redeploy: async (id: string) => {
+    const response = await api.post(`/deployments/${id}/redeploy`);
+    return response.data;
+  },
 };
 
 // RAG API
 export const ragAPI = {
-  collections: {
-    list: () => api.get("/rag/collections"),
-    create: (data: { name: string; description?: string }) =>
-      api.post("/rag/collections", data),
-    delete: (name: string) => api.delete(`/rag/collections/${name}`),
+  listCollections: async () => {
+    const response = await api.get("/rag/collections");
+    return response.data;
   },
 
-  documents: {
-    list: (params?: { collection_name?: string; page?: number }) =>
-      api.get("/rag/documents", { params }),
-    upload: (file: File, collection_name: string) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      return api.post(
-        `/rag/documents?collection_name=${collection_name}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-    },
-    delete: (id: string) => api.delete(`/rag/documents/${id}`),
+  createCollection: async (data: { name: string; description?: string }) => {
+    const response = await api.post("/rag/collections", data);
+    return response.data;
   },
 
-  query: (data: RAGQueryData) => api.post("/rag/query", data),
+  deleteCollection: async (name: string) => {
+    const response = await api.delete(`/rag/collections/${name}`);
+    return response.data;
+  },
 
-  search: (query: string, collection_name: string, top_k?: number) =>
-    api.post("/rag/search", { query, collection_name, top_k }),
+  listDocuments: async (collectionName?: string, page?: number) => {
+    const response = await api.get("/rag/documents", {
+      params: { collection_name: collectionName, page },
+    });
+    return response.data;
+  },
+
+  uploadDocument: async (collectionName: string, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post(
+      `/rag/documents?collection_name=${collectionName}`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    return response.data;
+  },
+
+  deleteDocument: async (id: string) => {
+    const response = await api.delete(`/rag/documents/${id}`);
+    return response.data;
+  },
+
+  query: async (collectionName: string, query: string, topK?: number) => {
+    const response = await api.post("/rag/query", {
+      collection_name: collectionName,
+      query,
+      top_k: topK,
+    });
+    return response.data;
+  },
 };
 
 // Analytics API
 export const analyticsAPI = {
-  dashboard: () => api.get("/analytics/dashboard"),
+  getDashboard: async () => {
+    const response = await api.get("/analytics/dashboard");
+    return response.data;
+  },
 
-  usage: (params?: { period?: string; deployment_id?: string }) =>
-    api.get("/analytics/usage", { params }),
+  getUsage: async (period?: string, params?: { deployment_id?: string }) => {
+    const response = await api.get("/analytics/usage", {
+      params: { period, ...params },
+    });
+    return response.data;
+  },
 
-  timeseries: (metric: string, period?: string) =>
-    api.get("/analytics/usage/timeseries", { params: { metric, period } }),
+  getUsageTimeseries: async (
+    metric: string,
+    period?: string,
+    params?: { deployment_id?: string }
+  ) => {
+    const response = await api.get("/analytics/usage/timeseries", {
+      params: { metric, period, ...params },
+    });
+    return response.data;
+  },
 
-  models: (period?: string) =>
-    api.get("/analytics/models", { params: { period } }),
+  getModels: async (period?: string) => {
+    const response = await api.get("/analytics/models", { params: { period } });
+    return response.data;
+  },
 
-  costs: (period?: string) =>
-    api.get("/analytics/costs", { params: { period } }),
+  getCosts: async (period?: string) => {
+    const response = await api.get("/analytics/costs", { params: { period } });
+    return response.data;
+  },
 
-  errors: (period?: string) =>
-    api.get("/analytics/errors", { params: { period } }),
+  getErrors: async (period?: string) => {
+    const response = await api.get("/analytics/errors", { params: { period } });
+    return response.data;
+  },
 };
 
 export const apiKeysAPI = {
-  list: () => api.get("/api-keys"),
-  create: (data: { name: string; scopes: string[]; expires_days?: number }) =>
-    api.post("/api-keys", data),
-  revoke: (keyId: string) => api.delete(`/api-keys/${keyId}`),
-};
+  list: async () => {
+    const response = await api.get("/api-keys");
+    return response.data;
+  },
 
+  create: async (data: {
+    name: string;
+    scopes?: string[];
+    expires_days?: number;
+  }) => {
+    const response = await api.post("/api-keys", data);
+    return response.data;
+  },
+
+  delete: async (keyId: string) => {
+    const response = await api.delete(`/api-keys/${keyId}`);
+    return response.data;
+  },
+};
 
 export const playgroundAPI = {
   chat: async (data: {
@@ -159,21 +239,20 @@ export const playgroundAPI = {
     system_prompt?: string;
     stream: boolean;
   }) => {
-    const response = await api.post('/playground/chat', data);
+    const response = await api.post("/playground/chat", data);
     return response.data;
   },
-  
+
   getModels: async () => {
-    const response = await api.get('/playground/models');
+    const response = await api.get("/playground/models");
     return response.data;
   },
-  
+
   getPresets: async () => {
-    const response = await api.get('/playground/presets');
+    const response = await api.get("/playground/presets");
     return response.data;
   },
 };
-
 
 // Types
 export interface CreateDeploymentData {

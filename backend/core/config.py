@@ -68,7 +68,8 @@ class Settings(BaseSettings):
     anthropic_model: str = "claude-3-opus-20240229"
 
     # LLM Settings
-    default_llm_provider: str = "gemini"
+    # Use "mock" for testing without API keys, or "gemini", "openai", "anthropic"
+    default_llm_provider: str = "mock"
     llm_max_tokens: int = 4096
     llm_temperature: float = 0.7
 
